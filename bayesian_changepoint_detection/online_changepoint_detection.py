@@ -65,3 +65,21 @@ class StudentT:
         self.kappa = kappaT0
         self.alpha = alphaT0
         self.beta = betaT0
+
+class Lomax:
+    def __init__(self, alpha, lamda):
+        # not to be confused with the alpha of a Gamma density, or lambda of an exp density
+        # I am using notation from Wikipedia https://en.wikipedia.org/wiki/Lomax_distribution
+        # where alpha is the shape parameter and lamda is the scale parameter
+        self.alpha0 = self.alpha = np.array([alpha])
+        self.lamda0 = self.lamda = np.array([lamda])
+    
+    def pdf(self, data):
+        return stats.lomax.pdf(x=data, loc=0, c=self.alpha, scale=self.lamda)
+    
+    def update_theta(self, data):
+        alphaT0 = np.concatenate((self.alpha0, self.alpha+1))
+        lamdaT0 = np.concatenate((self.lamda0, self.lamda+data))
+
+        self.alpha = alphaT0
+        self.lamda = lamdaT0
